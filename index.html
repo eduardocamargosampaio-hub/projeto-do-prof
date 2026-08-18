@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Garage - Showroom Automotivo</title>
+  <style>
+    :root {
+      --bg-color: #07090e;
+      --surface: #111827;
+      --surface-border: #1f2937;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --price-color: #34d399;
+      --focus-ring: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -60px;
+      left: 10px;
+      background: var(--focus-ring);
+      color: #000;
+      font-weight: bold;
+      padding: 12px 16px;
+      z-index: 100;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 10px;
+    }
+
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    header {
+      background: linear-gradient(180deg, #0f172a 0%, var(--bg-color) 100%);
+      padding: 3.5rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: var(--accent);
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      max-width: 650px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .search-container {
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: 1px solid var(--surface-border);
+      background-color: var(--surface);
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background-color: var(--surface);
+      color: var(--text-main);
+      border: 1px solid var(--surface-border);
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--accent);
+      color: #07090e;
+      border-color: var(--accent);
+    }
+
+    main {
+      max-width: 1380px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background-color: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--surface-border);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: var(--text-main);
+    }
+
+    .price-tag {
+      color: var(--price-color);
+      font-weight: 700;
+      font-size: 1.1rem;
+      white-space: nowrap;
+    }
+
+    .card-description {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+    }
+
+    .specs-table th,
+    .specs-table td {
+      padding: 6px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .specs-table th {
+      color: var(--accent);
+      font-weight: 600;
+      width: 38%;
+    }
+
+    .specs-table td {
+      color: var(--text-main);
+    }
+
+    .btn {
+      margin-top: auto;
+      display: block;
+      width: 100%;
+      background-color: var(--accent);
+      color: #07090e;
+      font-weight: 700;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Modal Acessível */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 550px;
+      width: 100%;
+      position: relative;
+    }
+
+    .modal-content h3 {
+      color: var(--accent);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .modal-price {
+      color: var(--price-color);
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .modal-content p {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      background-color: #030406;
+      color: var(--text-muted);
+      margin-top: 80px;
+      border-top: 1px solid var(--surface-border);
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
+
+  <header role="banner">
+    <h1>Apex Garage</h1>
+    <p>Showroom internacional com especificações técnicas completas e acessibilidade total.</p>
+    
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-input" placeholder="Buscar por modelo ou marca..." onkeyup="filtrarTodos()" aria-label="Buscar veículos por nome">
+    </div>
+
+    <div class="filters" role="region" aria-label="Filtros de veículos">
+      <button class="filter-btn active" onclick="setCategoria('todos', this)">Todos</button>
+      <button class="filter-btn" onclick="setCategoria('classicos', this)">Clássicos</button>
+      <button class="filter-btn" onclick="setCategoria('esportivos', this)">Esportivos</button>
+      <button class="filter-btn" onclick="setCategoria('eletricos', this)">Elétricos</button>
+      <button class="filter-btn" onclick="setCategoria('suv', this)">SUVs & Off-Road</button>
+    </div>
+  </header>
+
+  <main id="conteudo-principal" tabindex="-1">
+    <div class="grid" id="car-grid">
+      <!-- Veículos carregados via JavaScript -->
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" onclick="fecharModal()" aria-label="Fechar janela">&times;</button>
+      <h3 id="modal-titulo">Título</h3>
+      <div class="modal-price" id="modal-preco">Preço</div>
+      <p id="modal-texto">Conteúdo...</p>
+    </div>
+  </div>
+
+  <footer role="contentinfo">
+    <p>&copy; 2026 Apex Garage. Desenvolvido para GitHub Pages com foco em acessibilidade e performance.</p>
+  </footer>
+
+  <script>
+    const carros = [
+      { id: 1, nome: "Porsche 911 Carrera 1973", cat: "classicos", preco: "R$ 2.400.000", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600", desc: "Clássico alemão lendário de coleção.", motor: "Boxer 6C 2.7L", pot: "210 cv", peças: "Carburadores Duplos, Câmbio 5m", detalhe: "Aceleração lendária com chassi aliviado e freios ventilados em todas as rodas." },
+      { id: 2, nome: "Apex GT Bi-Turbo", cat: "esportivos", preco: "R$ 3.800.000", img: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600", desc: "Aerodinâmica ativa e chassi de carbono.", motor: "V8 4.0 Bi-Turbo", pot: "720 cv", peças: "Carbono-Cerâmica, Dupla Embreagem", detalhe: "Chassi monocoque de fibra de carbono com aerodinâmica ativa ajustável." },
+      { id: 3, nome: "Volt-S Performance", cat: "eletricos", preco: "R$ 1.250.000", img: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=600", desc: "Aceleração instantânea com autonomia estendida.", motor: "Dual Motor (AWD)", pot: "1.020 cv", peças: "Bateria 100 kWh, Suspensão Ar", detalhe: "Faz 0 a 100 km/h em menos de 2.1 segundos com gerenciamento térmico avançado." },
+      { id: 4, nome: "Viper Muscle V8", cat: "esportivos", preco: "R$ 950.000", img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600", desc: "Força bruta americana tradicional.", motor: "V8 5.0L Aspirado", pot: "480 cv", peças: "Freios Brembo, Câmbio Manual", detalhe: "Diferencial blocante e escapamento ativo ajustável por válvulas eletrônicas." },
+      { id: 5, nome: "Titan Off-Road Híbrido", cat: "suv", preco: "R$ 680.000", img: "https://images.unsplash.com/photo-1541348263662-e082662dc324?w=600", desc: "Capacidade extrema para qualquer terreno.", motor: "2.0 Turbo + Elétrico", pot: "380 cv", peças: "Tração 4x4, Pneus All-Terrain", detalhe: "Bloqueio mecânico de diferencial e imersão em água de até 90 cm." },
+      { id: 6, nome: "Berlinetta Vintage 1968", cat: "classicos", preco: "R$ 8.500.000", img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600", desc: "Obra-prima do design italiano vintage.", motor: "V12 3.0L", pot: "300 cv", peças: "Rodas de Raio, Câmbio Seco", detalhe: "Acabamento interno artesanal e mecânica pura V12 altamente colecionável." },
+      { id: 7, nome: "Ferrari F40 Classic", cat: "classicos", preco: "R$ 14.000.000", img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600", desc: "O último supercarro aprovado por Enzo Ferrari.", motor: "V8 2.9 Bi-Turbo", pot: "478 cv", peças: "Carroceria Kevlar, Câmbio Manual", detalhe: "Lendário supercarro sem assistências eletrônicas, foco total em performance purista." },
+      { id: 8, nome: "Lamborghini Aventador", cat: "esportivos", preco: "R$ 4.900.000", img: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600", desc: "Design agressivo e ronco V12 inconfundível.", motor: "V12 6.5L Aspirado", pot: "770 cv", peças: "Portas Tesoura, Tração Integral", detalhe: "Sistema de esterço das rodas traseiras e aerodinâmica ALA de segunda geração." },
+      { id: 9, nome: "Taycan Cross Turismo", cat: "eletricos", preco: "R$ 980.000", img: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600", desc: "Station wagon elétrica de alta performance.", motor: "AWD Elétrico Dual", pot: "761 cv", peças: "Arquitetura 800V, Câmbio 2m", detalhe: "Recarga ultra-rápida em corrente contínua e suspensão a ar adaptativa com modo Gravel." },
+      { id: 10, nome: "Defender 110 Trophy", cat: "suv", preco: "R$ 750.000", img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600", desc: "Ícone off-road com tecnologia moderna.", motor: "3.0 MHEV Turbo", pot: "400 cv", peças: "Terrain Response 2, Suspensão Ar", detalhe: "Chassi monocoque de alumínio de extrema rigidez e capacidade de reboque de 3.5 toneladas." },
+      { id: 11, nome: "Shelby GT500 Eleanore", cat: "classicos", preco: "R$ 1.800.000", img: "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=600", desc: "Muscle car lendário restaurado em alto padrão.", motor: "V8 7.0L Big Block", pot: "550 cv", peças: "Injeção Eletrônica, Nitro System", detalhe: "Restauração Restomod mantendo a estética de 1967 com componentes de suspensão modernos." },
+      { id: 12, nome: "McLaren 720S Spider", cat: "esportivos", preco: "R$ 3.600.000", img: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=600", desc: "Conversível com desempenho de pista.", motor: "V8 4.0 Bi-Turbo", pot: "720 cv", peças: "Proactive Chassis Control II", detalhe: "Teto retrátil de carbono acionado em 11 segundos e visibilidade panorama 360 graus." },
+      { id: 13, nome: "Audi RS e-tron GT", cat: "eletricos", preco: "R$ 1.100.000", img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600", desc: "Gran turismo elétrico dinâmico.", motor: "Dual Motor Elétrico", pot: "646 cv", peças: "Diferencial Traseiro Blocante", detalhe: "Faróis de laser matrix e vetorização de torque elétrico nas quatro rodas." },
+      { id: 14, nome: "Mercedes G63 AMG 6x6", cat: "suv", preco: "R$ 6.200.000", img: "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=600", desc: "Utilitário 6x6 de presença imponente.", motor: "V8 5.5 Bi-Turbo", pot: "544 cv", peças: "Eixos Portais, 5 Diferenciais", detalhe: "Sistema de calibragem automática de pneus da cabine e capacidade para terrenos desérticos." },
+      { id: 15, nome: "Chevrolet Corvette C3 1972", cat: "classicos", preco: "R$ 420.000", img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600", desc: "Linhas marcantes estilo garrafa de Coca-Cola.", motor: "V8 5.7L Small Block", pot: "270 cv", peças: "T-Top Removível, Freios a Disco", detalhe: "Carroceria em fibra de vidro original e teto removível estilo T-Top." },
+      { id: 16, nome: "Nissan GT-R Nismo", cat: "esportivos", preco: "R$ 1.650.000", img: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=600", desc: "O devorador de pistas conhecido como Godzilla.", motor: "V6 3.8 Bi-Turbo", pot: "600 cv", peças: "Turbinas da GT3, Tração ATTESA", detalhe: "Turbinas derivadas dos carros de corrida da categoria GT3 e tração integral computadorizada." },
+      { id: 17, nome: "Lucid Air Sapphire", cat: "eletricos", preco: "R$ 1.550.000", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600", desc: "O sedan elétrico mais rápido e potente.", motor: "Tri-Motor Elétrico", pot: "1.230 cv", peças: "Freios Carbono, Vetorização", detalhe: "Velocidade máxima superior a 330 km/h e autonomia estimada acima de 680 km." },
+      { id: 18, nome: "Ford Bronco Raptor", cat: "suv", preco: "R$ 790.000", img: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600", desc: "Preparado de fábrica para desertos e pedras.", motor: "V6 3.0 EcoBoost", pot: "424 cv", peças: "Amortecedores Fox Live Valve", detalhe: "Bitola alargada em 22 cm em relação ao modelo padrão e proteções inferiores em aço." },
+      { id: 19, nome: "Jaguar E-Type Roadster 1965", cat: "classicos", preco: "R$ 1.950.000", img: "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=600", desc: "Considerado o carro mais bonito já feito.", motor: "Seis em Linha 4.2L", pot: "265 cv", peças: "Carburadores Triple SU", detalhe: "Construção em monocoque de alumínio e freios traseiros montados internamente ao diferencial." },
+      { id: 20, nome: "Aston Martin DBS Superleggera", cat: "esportivos", preco: "R$ 3.200.000", img: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600", desc: "Grand Tourer britânico de luxo e potência.", motor: "V12 5.2 Bi-Turbo", pot: "725 cv", peças: "Câmbio ZF 8m, Painéis Carbono", detalhe: "Torque avassalador de 900 Nm disponível logo a partir de 1.800 RPM." },
+      { id: 21, nome: "Rimac Nevera", cat: "eletricos", preco: "R$ 18.000.000", img: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600", desc: "Hypercar elétrico que quebrou múltiplos recordes.", motor: "4 Motores Elétricos", pot: "1.914 cv", peças: "Monocoque Carbono Integrado", detalhe: "Vetorização de torque individual em cada roda calculada 100 vezes por segundo." },
+      { id: 22, nome: "Jeep Wrangler Rubicon V8", cat: "suv", preco: "R$ 620.000", img: "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?w=600", desc: "Força V8 em um ícone de trilhas extremas.", motor: "V8 6.4 Hemi", pot: "470 cv", peças: "Eixos Dana 44, Desconexão Barra", detalhe: "Eixos Dana 44 reforçados de fábrica e desconexão hidráulica da barra estabilizadora." },
+      { id: 23, nome: "Mercedes-Benz 300 SL Gullwing", cat: "classicos", preco: "R$ 12.500.000", img: "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?w=600", desc: "Famoso pelas portas asa de gaivota.", motor: "Seis em Linha 3.0L", pot: "215 cv", peças: "Injeção Direta Mecânica Bosch", detalhe: "Primeiro carro de produção em série com injeção direta de combustível na história." },
+      { id: 24, nome: "Bugatti Chiron Sport", cat: "esportivos", preco: "R$ 26.000.000", img: "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?w=600", desc: "Enfrentando os limites da física automotiva.", motor: "W16 8.0 Quad-Turbo", pot: "1.500 cv", peças: "4 Turbo compressores, AWD", detalhe: "Sistemas especiais de refrigeração com 10 radiadores para dissipar a energia do motor W16." },
+      { id: 25, nome: "BMW i7 M70 xDrive", cat: "eletricos", preco: "R$ 1.320.000", img: "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=600", desc: "O topo do luxo executivo sustentável.", motor: "Dual Motor Elétrico", pot: "660 cv", peças: "Tela 31 Theater Screen", detalhe: "Bancos traseiros executivos inclináveis com massagem e tela de projeção 8K embutida." },
+      { id: 26, nome: "Range Rover SV Autobiography", cat: "suv", preco: "R$ 1.850.000", img: "https://images.unsplash.com/photo-1563720223523-491ff0fe54a5?w=600", desc: "Primeira classe em qualquer terreno.", motor: "V8 4.4 Bi-Turbo", pot: "530 cv", peças: "Direção em 4 Rodas, Couro", detalhe: "Esterço ativo do eixo traseiro em até 7.3 graus facilitando manobras em ambientes urbanos." },
+      { id: 27, nome: "Dodge Charger RT 1970", cat: "classicos", preco: "R$ 680.000", img: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=600", desc: "Representante dourado do verdadeiro Muscle Car.", motor: "V8 440 Magnum", pot: "375 cv", peças: "Supercharger Blower opcional", detalhe: "Tradição das pistas de arrancada americanas com tração traseira e chassi reforçado." },
+      { id: 28, nome: "Lexus LFA Nürburgring", cat: "esportivos", preco: "R$ 11.000.000", img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600", desc: "Construção de precisão japonesa.", motor: "V10 4.8L Aspirado", pot: "570 cv", peças: "Chassi em Carbono CFS", detalhe: "Motor V10 desenvolvido em parceria com a Yamaha capaz de subir de rotação até 9.000 RPM." },
+      { id: 29, nome: "Polestar 3 Performance", cat: "eletricos", preco: "R$ 720.000", img: "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=600", desc: "SUV elétrico escandinavo minimalista.", motor: "Dual Motor AWD", pot: "517 cv", peças: "Suspensão Öhlins Ativa", detalhe: "Amortecedores ativos da renomada fabricante Öhlins e sensores LiDaR integrados." },
+      { id: 30, nome: "Toyota Land Cruiser Prado 70", cat: "suv", preco: "R$ 540.000", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600", desc: "Lendária durabilidade mecânica para expedições.", motor: "V8 4.5 Turbo Diesel", pot: "205 cv", peças: "Snorkel, Guincho de Fábrica", detalhe: "Projetado para operar em condições de isolamento com manutenção simplificada." },
+      { id: 31, nome: "Alfa Romeo Giulia GTA 1965", cat: "classicos", preco: "R$ 1.100.000", img: "https://images.unsplash.com/photo-1541348263662-e082662dc324?w=600", desc: "Pesando apenas 740 kg para pistas.", motor: "4C 1.6L Twin Spark", pot: "170 cv", peças: "Painéis de Alumínio", detalhe: "Carroceria com liga leve de alumínio criada especificamente para corridas." },
+      { id: 32, nome: "Pagani Huayra Roadster", cat: "esportivos", preco: "R$ 22.000.000", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600", desc: "Escultura rolante com motor AMG V12.", motor: "V12 6.0 Bi-Turbo AMG", pot: "764 cv", peças: "Carbo-Titanium HP62", detalhe: "Material de chassi exclusivo combinando liga de titânio com fibra de carbono." },
+      { id: 33, nome: "Lotus Evija Hyper-EV", cat: "eletricos", preco: "R$ 16.500.000", img: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600", desc: "O carro de produção mais potente do planeta.", motor: "4 Motores Individuais", pot: "2.039 cv", peças: "Canais Venturi Integrados", detalhe: "Túneis aerodinâmicos cortando a carroceria para reduzir o arrasto a zero." },
+      { id: 34, nome: "Lamborghini Urus Performante", cat: "suv", preco: "R$ 3.400.000", img: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600", desc: "O DNA de supercarro aplicado a um SUV.", motor: "V8 4.0 Bi-Turbo", pot: "666 cv", peças: "Escapamento Titânio Akrapovič", detalhe: "Modo Rally exclusivo para condução rápida em terra batida e cascalho." },
+      { id: 35, nome: "De Tomaso Pantera 1974", cat: "classicos", preco: "R$ 890.000", img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600", desc: "Estilo italiano alimentado por um V8 americano.", motor: "V8 5.7L Ford Cleveland", pot: "330 cv", peças: "Transmissão ZF 5m Transaxle", detalhe: "Fusão entre o design do estúdio Ghia com motor V8 forte e confiável." },
+      { id: 36, nome: "Koenigsegg Jesko Attack", cat: "esportivos", preco: "R$ 28.000.000", img: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600", desc: "Enfrentando barreiras de sustentação aerodinâmica.", motor: "V8 5.0 Flat-Plane Bi-Turbo", pot: "1.625 cv", peças: "Câmbio LST 9 marchas", detalhe: "Câmbio revolucionário que permite saltar entre marchas de forma instantânea." }
+    ];
+
+    let categoriaAtual = 'todos';
+
+    function renderizarCarros(lista) {
+      const grid = document.getElementById('car-grid');
+      grid.innerHTML = '';
+
+      if (!lista || lista.length === 0) {
+        grid.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1; padding: 40px;">Nenhum veículo encontrado.</p>';
+        return;
+      }
+
+      lista.forEach(carro => {
+        const article = document.createElement('article');
+        article.className = 'card';
+        article.innerHTML = `
+          <img src="${carro.img}" alt="${carro.nome}">
+          <div class="card-content">
+            <div class="card-header">
+              <h2>${carro.nome}</h2>
+              <span class="price-tag">${carro.preco}</span>
+            </div>
+            <p class="card-description">${carro.desc}</p>
+            <table class="specs-table">
+              <tbody>
+                <tr><th scope="row">Motor</th><td>${carro.motor}</td></tr>
+                <tr><th scope="row">Potência</th><td>${carro.pot}</td></tr>
+                <tr><th scope="row">Destaques</th><td>${carro.peças}</td></tr>
+              </tbody>
+            </table>
+            <button class="btn" onclick="abrirModal('${carro.nome.replace(/'/g, "\\'")}', '${carro.preco}', '${carro.detalhe.replace(/'/g, "\\'")}')">Ficha Completa</button>
+          </div>
+        `;
+        grid.appendChild(article);
+      });
+    }
+
+    function setCategoria(cat, btn) {
+      categoriaAtual = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      filtrarTodos();
+    }
+
+    function filtrarTodos() {
+      const buscaInput = document.getElementById('search-input');
+      const busca = buscaInput ? buscaInput.value.toLowerCase().trim() : '';
+
+      const resultado = carros.filter(carro => {
+        const nomeCarro = carro.nome ? carro.nome.toLowerCase() : '';
+        const motorCarro = carro.motor ? carro.motor.toLowerCase() : '';
+
+        const bateCategoria = (categoriaAtual === 'todos' || carro.cat === categoriaAtual);
+        const bateBusca = busca === '' || nomeCarro.includes(busca) || motorCarro.includes(busca);
+
+        return bateCategoria && bateBusca;
+      });
+
+      renderizarCarros(resultado);
+    }
+
+    function abrirModal(titulo, preco, detalhe) {
+      document.getElementById('modal-titulo').innerText = titulo;
+      document.getElementById('modal-preco').innerText = preco;
+      document.getElementById('modal-texto').innerText = detalhe;
+      const modal = document.getElementById('modal');
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function fecharModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') fecharModal();
+    });
+
+    // Início
+    renderizarCarros(carros);
+  </script>
+</body>
+</html>
