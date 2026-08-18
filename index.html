@@ -1,3 +1,10 @@
+Aqui está uma versão do seu **`index.html`** atualizada com o **botão de acessibilidade para aumentar e diminuir o tamanho do texto e do site**.
+
+Foram adicionados dois botões na parte superior da tela (**A+** para aumentar e **A-** para diminuir/resetar) com suporte total via teclado e leitores de tela.
+
+Substitua todo o conteúdo do seu **`index.html`** no GitHub por este código:
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,6 +22,11 @@
       --accent-hover: #0ea5e9;
       --price-color: #34d399;
       --focus-ring: #f59e0b;
+      --base-font-size: 100%;
+    }
+
+    html {
+      font-size: var(--base-font-size);
     }
 
     * {
@@ -28,6 +40,40 @@
       line-height: 1.6;
       background-color: var(--bg-color);
       color: var(--text-main);
+    }
+
+    /* Barra de Acessibilidade Superior */
+    .accessibility-bar {
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .accessibility-bar span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-right: 5px;
+    }
+
+    .access-btn {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      border: 1px solid var(--surface-border);
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .access-btn:hover {
+      background-color: var(--accent);
+      color: #07090e;
     }
 
     .skip-link {
@@ -54,7 +100,7 @@
 
     header {
       background: linear-gradient(180deg, #0f172a 0%, var(--bg-color) 100%);
-      padding: 3.5rem 1.5rem 2rem;
+      padding: 2.5rem 1.5rem 2rem;
       text-align: center;
       border-bottom: 1px solid var(--surface-border);
     }
@@ -222,7 +268,6 @@
       background-color: var(--accent-hover);
     }
 
-    /* Modal Acessível */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -295,6 +340,13 @@
 
   <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
 
+  <div class="accessibility-bar" aria-label="Controles de Acessibilidade">
+    <span>Tamanho da Fonte:</span>
+    <button class="access-btn" onclick="alterarTamanhoFonte(1)" aria-label="Aumentar tamanho do texto">A+</button>
+    <button class="access-btn" onclick="alterarTamanhoFonte(-1)" aria-label="Diminuir tamanho do texto">A-</button>
+    <button class="access-btn" onclick="resetarTamanhoFonte()" aria-label="Restaurar tamanho padrão">Resetar</button>
+  </div>
+
   <header role="banner">
     <h1>Apex Garage</h1>
     <p>Showroom internacional com especificações técnicas completas e acessibilidade total.</p>
@@ -338,7 +390,7 @@
       { id: 3, nome: "Volt-S Performance", cat: "eletricos", preco: "R$ 1.250.000", img: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=600", desc: "Aceleração instantânea com autonomia estendida.", motor: "Dual Motor (AWD)", pot: "1.020 cv", peças: "Bateria 100 kWh, Suspensão Ar", detalhe: "Faz 0 a 100 km/h em menos de 2.1 segundos com gerenciamento térmico avançado." },
       { id: 4, nome: "Viper Muscle V8", cat: "esportivos", preco: "R$ 950.000", img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600", desc: "Força bruta americana tradicional.", motor: "V8 5.0L Aspirado", pot: "480 cv", peças: "Freios Brembo, Câmbio Manual", detalhe: "Diferencial blocante e escapamento ativo ajustável por válvulas eletrônicas." },
       { id: 5, nome: "Titan Off-Road Híbrido", cat: "suv", preco: "R$ 680.000", img: "https://images.unsplash.com/photo-1541348263662-e082662dc324?w=600", desc: "Capacidade extrema para qualquer terreno.", motor: "2.0 Turbo + Elétrico", pot: "380 cv", peças: "Tração 4x4, Pneus All-Terrain", detalhe: "Bloqueio mecânico de diferencial e imersão em água de até 90 cm." },
-      { id: 6, nome: "Berlinetta Vintage 1968", cat: "classicos", preco: "R$ 8.500.000", img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600", desc: "Obra-prima do design italiano vintage.", motor: "V12 3.0L", pot: "300 cv", peças: "Rodas de Raio, Câmbio Seco", detalhe: "Acabamento interno artesanal e mecânica pura V12 altamente colecionável." },
+      { id: 6, nome: "Berlinetta Vintage 1968", cat: "classicos", preco: "R$ 8.500.000", img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600", desc: "Obra-prima do design italiano vintage.", motor: "V12 3.0L", pot: "300 cv", peças: "Rodas de Raio, Câmbio Seco", detalhe: "Acabamento interno artesanal e mecânica pura V12 altamente colecinável." },
       { id: 7, nome: "Ferrari F40 Classic", cat: "classicos", preco: "R$ 14.000.000", img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600", desc: "O último supercarro aprovado por Enzo Ferrari.", motor: "V8 2.9 Bi-Turbo", pot: "478 cv", peças: "Carroceria Kevlar, Câmbio Manual", detalhe: "Lendário supercarro sem assistências eletrônicas, foco total em performance purista." },
       { id: 8, nome: "Lamborghini Aventador", cat: "esportivos", preco: "R$ 4.900.000", img: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600", desc: "Design agressivo e ronco V12 inconfundível.", motor: "V12 6.5L Aspirado", pot: "770 cv", peças: "Portas Tesoura, Tração Integral", detalhe: "Sistema de esterço das rodas traseiras e aerodinâmica ALA de segunda geração." },
       { id: 9, nome: "Taycan Cross Turismo", cat: "eletricos", preco: "R$ 980.000", img: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600", desc: "Station wagon elétrica de alta performance.", motor: "AWD Elétrico Dual", pot: "761 cv", peças: "Arquitetura 800V, Câmbio 2m", detalhe: "Recarga ultra-rápida em corrente contínua e suspensão a ar adaptativa com modo Gravel." },
@@ -346,7 +398,7 @@
       { id: 11, nome: "Shelby GT500 Eleanore", cat: "classicos", preco: "R$ 1.800.000", img: "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=600", desc: "Muscle car lendário restaurado em alto padrão.", motor: "V8 7.0L Big Block", pot: "550 cv", peças: "Injeção Eletrônica, Nitro System", detalhe: "Restauração Restomod mantendo a estética de 1967 com componentes de suspensão modernos." },
       { id: 12, nome: "McLaren 720S Spider", cat: "esportivos", preco: "R$ 3.600.000", img: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=600", desc: "Conversível com desempenho de pista.", motor: "V8 4.0 Bi-Turbo", pot: "720 cv", peças: "Proactive Chassis Control II", detalhe: "Teto retrátil de carbono acionado em 11 segundos e visibilidade panorama 360 graus." },
       { id: 13, nome: "Audi RS e-tron GT", cat: "eletricos", preco: "R$ 1.100.000", img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600", desc: "Gran turismo elétrico dinâmico.", motor: "Dual Motor Elétrico", pot: "646 cv", peças: "Diferencial Traseiro Blocante", detalhe: "Faróis de laser matrix e vetorização de torque elétrico nas quatro rodas." },
-      { id: 14, nome: "Mercedes G63 AMG 6x6", cat: "suv", preco: "R$ 6.200.000", img: "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=600", desc: "Utilitário 6x6 de presença imponente.", motor: "V8 5.5 Bi-Turbo", pot: "544 cv", peças: "Eixos Portais, 5 Diferenciais", detalhe: "Sistema de calibragem automática de pneus da cabine e capacidade para terrenos desérticos." },
+      { id: 14, motor: "V8 5.5 Bi-Turbo", nome: "Mercedes G63 AMG 6x6", cat: "suv", preco: "R$ 6.200.000", img: "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=600", desc: "Utilitário 6x6 de presença imponente.", pot: "544 cv", peças: "Eixos Portais, 5 Diferenciais", detalhe: "Sistema de calibragem automática de pneus da cabine e capacidade para terrenos desérticos." },
       { id: 15, nome: "Chevrolet Corvette C3 1972", cat: "classicos", preco: "R$ 420.000", img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600", desc: "Linhas marcantes estilo garrafa de Coca-Cola.", motor: "V8 5.7L Small Block", pot: "270 cv", peças: "T-Top Removível, Freios a Disco", detalhe: "Carroceria em fibra de vidro original e teto removível estilo T-Top." },
       { id: 16, nome: "Nissan GT-R Nismo", cat: "esportivos", preco: "R$ 1.650.000", img: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=600", desc: "O devorador de pistas conhecido como Godzilla.", motor: "V6 3.8 Bi-Turbo", pot: "600 cv", peças: "Turbinas da GT3, Tração ATTESA", detalhe: "Turbinas derivadas dos carros de corrida da categoria GT3 e tração integral computadorizada." },
       { id: 17, nome: "Lucid Air Sapphire", cat: "eletricos", preco: "R$ 1.550.000", img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600", desc: "O sedan elétrico mais rápido e potente.", motor: "Tri-Motor Elétrico", pot: "1.230 cv", peças: "Freios Carbono, Vetorização", detalhe: "Velocidade máxima superior a 330 km/h e autonomia estimada acima de 680 km." },
@@ -372,6 +424,19 @@
     ];
 
     let categoriaAtual = 'todos';
+    let tamanhoAtualFonte = 100;
+
+    function alterarTamanhoFonte(fator) {
+      tamanhoAtualFonte += fator * 10;
+      if (tamanhoAtualFonte < 80) tamanhoAtualFonte = 80;
+      if (tamanhoAtualFonte > 150) tamanhoAtualFonte = 150;
+      document.documentElement.style.setProperty('--base-font-size', tamanhoAtualFonte + '%');
+    }
+
+    function resetarTamanhoFonte() {
+      tamanhoAtualFonte = 100;
+      document.documentElement.style.setProperty('--base-font-size', '100%');
+    }
 
     function renderizarCarros(lista) {
       const grid = document.getElementById('car-grid');
@@ -450,8 +515,9 @@
       if (e.key === 'Escape') fecharModal();
     });
 
-    // Início
     renderizarCarros(carros);
   </script>
 </body>
 </html>
+
+```
